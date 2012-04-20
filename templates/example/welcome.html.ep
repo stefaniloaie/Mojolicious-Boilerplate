@@ -1,10 +1,9 @@
-% layout 'starter';
-% title 'Welcome';
-
-% content_for 'hero_unit' => begin
+%layout 'starter';
+%title 'Hello world';
+<% content_for 'hero_unit' => begin %>
  <div class="hero-unit">
 
-    <h1>Mojolicious  and Bootstrap</h1>
+    <h1>Mojolicious  and Stefan</h1>
     <p>Create web apps like a boss</p>
 
     <p>
@@ -16,11 +15,14 @@
 % end
 
 
-<h2><%= $message %></h2>
+<h2></h2>
 <p>
-This page was generated from the template
+
+
+This page was generated from the template1111111
 "templates/example/welcome.html.ep" and the layout
 "templates/layouts/starter.html.ep",
 <a href="<%== url_for %>">click here</a>
 to reload the page
 </p> 
+

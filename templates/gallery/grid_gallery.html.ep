@@ -1,5 +1,5 @@
-%layout 'starter';
-%title 'Welcome';
+
+%title 'Welcome11111';
 
 %if (defined( $images ) && scalar(@$images) > 0 ){
   <ul id="myGallery" class="thumbnails">

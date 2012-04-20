@@ -21,5 +21,3 @@ sub gallery{
     images => $imgs
   );
 }
-
-1;

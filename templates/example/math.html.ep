@@ -1,0 +1,187 @@
+% layout 'starter';
+% title 'Welcome';
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+<script type="text/javascript">
+
+$(document).ready(function(){  
+ 
+    //how much items per page to show  
+    var show_per_page = 5;           
+    //getting the amount of elements inside content div  
+    var number_of_items = $('#content').children().size();  
+    //calculate the number of pages we are going to have  
+    var number_of_pages = Math.ceil(number_of_items/show_per_page);  
+
+    //set the value of our hidden input fields  
+    $('#current_page').val(0);  
+    $('#show_per_page').val(show_per_page);  
+    $('#pages').val(number_of_pages); 
+    //now when we got all we need for the navigation let's make it '  
+  
+    /* 
+    what are we going to have in the navigation? 
+        - link to previous page 
+        - links to specific pages 
+        - link to next page 
+    */  
+    var navigation_html = '<a class="previous_link" href="javascript:previous();">Prev</a>';  
+    var current_link = 0;  
+    var index=1;
+    while(number_of_pages > current_link){  
+	if( current_link >= 0 && current_link < 10*index-1){        
+	navigation_html += '<a class="page_link" href="javascript:go_to_page(' + (current_link + 1) +')" longdesc="' + current_link +'"> '+ (current_link + 1) +' </a>';
+	}  
+        current_link++;  
+	   
+    }  
+    navigation_html += '<a class="next_link" href="javascript:next();">Next</a>';  
+  
+    $('#page_navigation').html(navigation_html);  
+  
+    //add active_page class to the first page link  
+    $('#page_navigation .page_link:first').addClass('active_page');  
+  
+    //hide all the elements inside content div  
+    $('#content').children().css('display', 'none');  
+    if( !number_of_items ) { $('#page_navigation').css('display', 'none'); }
+	else
+	 {   $('#page_navigation').css('display','block');          }
+    //and show the first n (show_per_page) elements  
+    $('#content').children().slice(0, show_per_page).css('display', 'block');  
+  
+});  
+  
+function previous(){  
+  
+    new_page = parseInt($('#current_page').val()) - 1;  
+    //if there is an item before the current active link run the function  
+    //if($('.active_page').prev('.page_link').length==true){  
+        go_to_page(new_page);  
+    //}  
+  
+}  
+  
+function next(){  
+    new_page = parseInt($('#current_page').val()) + 1;  
+    //if there is an item after the current active link run the function  
+    //if($('.active_page').next('.page_link').length==true){  
+        go_to_page(new_page);  
+    //}  
+  
+}  
+
+function go_to_page(page_num){  
+    //get the number of items shown per page  
+    var show_per_page = parseInt($('#show_per_page').val());  
+    var pre = page_num / 10;   
+    //confirm( parseInt(page_num / 10) );
+    //get the element number where to start the slice from  
+    start_from = page_num * show_per_page - show_per_page;  
+    $('#page_navigation').css('display', 'block');
+    //get the element number where to end the slice  
+    end_on = start_from + show_per_page ;  
+  
+    //hide all children elements of content div, get specific items and show them  
+    $('#content').children().css('display', 'none').slice(start_from, end_on).css('display', 'block');  
+   
+    /*get the page link that has longdesc attribute of the current page and add active_page class to it 
+    and remove that class from previously active page link*/  
+    $('.page_link[longdesc=' + page_num +']').addClass('active_page').siblings('.active_page').removeClass('active_page');  
+    
+    //update the current page input field  
+    $('#current_page').val(page_num);  
+    if( $('#pages').val() == page_num ) { return 1; }
+    var navigation_html = '<a class="previous_link" href="javascript:previous();">Prev</a>';  
+    var current_link = 0;  
+    var index=0;
+    var pages = $('#pages').val();
+    var page = parseInt(pages/10);	
+    		
+	if( page_num > 9 && page_num != 1 && parseInt(pages/10) != parseInt(page_num / 10)) {          
+		while(current_link < 10 ){	
+			navigation_html += '<a class="page_link" href="javascript:go_to_page(' + ( current_link + (parseInt(pre) * 10 )) +')" longdesc="' + current_link +'"> '+ ( current_link + (parseInt(pre) * 10 )) +' </a>';
+		current_link++;		
+		}
+	}
+	
+	if(page_num > 10 && parseInt(pages/10) == parseInt(page_num / 10)){
+		current_link = page_num;
+		
+		while(current_link <= pages ){	
+			navigation_html += '<a class="page_link" href="javascript:go_to_page(' + current_link + ' )" longdesc="' + current_link +'"> '+ ( current_link ) +' </a>';
+		
+			current_link++;		
+		}
+	}
+	if( page_num <= 9 ) {
+		current_link = 1;
+		while(current_link <= 9 ){	
+			navigation_html += '<a class="page_link" href="javascript:go_to_page(' + current_link  +')" longdesc="' + current_link +'"> '+ current_link +' </a>';
+			current_link++;		
+		}
+	}	  
+       // current_link++;  	  
+  
+    navigation_html += '<a class="next_link" href="javascript:next();">Next</a>';  
+    if( current_link != 0 ){ 
+    	$('#page_navigation').html(navigation_html);  
+    }
+} 
+
+</script>
+
+<body>
+<div style="float:left;width:50%">
+<form action="/alabala" method="post" class="form-horizontal">
+
+<legend>Please input the data you want: </legend>
+<div class="control-group"><label for="1" class="control-label">Monthly Inv: </label><input id="1" type="text" name="monthly_investment"> </div>
+<div class="control-group"><label for="2" class="control-label">App value: </label><input id="2" type="text" name="apartment_value"></div>
+<div class="control-group"><label for="3" class="control-label">App numbers: </label><input type="text" name="start_aparments_no" id="3"></div>
+<div class="control-group"><label for="4" class="control-label">Down Payment:</label><input type="text" id="4" name="down_payment" ></div>
+<div class="control-group"><label for="5" class="control-label">Rent: </label><input type="text" name="monthly_rent" ></div>
+<div class="control-group"><label for="6" class="control-label">Start Cash: </label><input type="text" id="6" name="start_cash"></div>  
+<div class="control-group"><label for="7" class="control-label">Initial Debt: </label><input type="text" id="7" name="initial_debt"></div>
+<div class="control-group"><label for="8" class="control-label">Credit Rate: </label><input type="text" id="8" name="credit_interest_rate" tyle="margin-top:-15px "> </div>
+<div class="control-group"><label for="9" class="control-label">Total Months: </label><input type="text" id="9" name="total_months" tyle="margin-top:-15px"></div>
+
+<div class="control-group"><label for="10" class="control-label">Percent from Assuered: </label><input type="text" name="percent_from_assured" id="10" style="margin-top:px"></div>
+
+<div class="control-group"><label for="11" class="control-label">Max Month per Credit: </label><input type="text" name="max_months_per_credit" id="11"></div>
+
+<div class="control-group"><label for="12" class="control-label">Yearly Rent Increase: </label><input type="text" name="yearly_rent_increase" id="12"></div>
+
+<div class="control-group"><label for="13" class="control-label">App Appreciation: </label><input type="text" name="apartment_appreciation" id="13" tyle="margin-left:180px;position:absolute; position:absolute;margin-top:-15px "></div>
+
+<div class="control-group"><label for="14" class="control-label">Annual Taxes: </label><input type="text" name="annual_taxes" id="14"></div>
+
+<div class="control-group"><label for="15" class="control-label">Annual Reparation: </label><input type="text" name="annual_reparations" id="15"></div>
+<input type="submit" value="Submit">
+</form>
+</div>
+
+<input type='hidden' id='current_page' />  
+<input type='hidden' id='show_per_page' /> 
+<input type='hidden' id='pages'/>
+
+<div style="float:left" id="content" >   
+% my $i=1;
+% foreach my $month ( @$math ) {
+	<ul>
+	<lh>Month: <%= $i%></lh>	
+	<li>Num apps: <%= $month->{num_aps} %> </li>
+	<li>Debt: <%= $month->{debt} %></li>
+	<li>Asset value: <%= $month->{assets_value} %></li>
+	<li>Total to invest: <%= $month->{total_to_invest} %></li>
+	<li>Max Credit on time: <%= $month->{max_credit_on_time} %></li>
+	<li>Total Credit : <%=$month->{total_possible_credit} %></li>
+	<li>Cash : <%= $month->{cash} %></li><br>
+	</ul>
+% $i=$i+1; }
+</div>
+
+<div id='page_navigation' style=""></div>  
+</body>
+</html>

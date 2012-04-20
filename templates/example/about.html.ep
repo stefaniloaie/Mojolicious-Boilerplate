@@ -1,7 +1,7 @@
 % layout 'starter';
 % title 'Welcome';
 % use utf8;
-% content_for 'hero_unit' => begin
+#% content_for 'hero_unit' => begin
  <div class="hero-unit">
 
     <h1>About Mojolicious, Bootstrap and this Boilerplate</h1>
@@ -50,5 +50,5 @@
   </div><!-- /row -->
 </section>
 
-% end
+#% end
 
