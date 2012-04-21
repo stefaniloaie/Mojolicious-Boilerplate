@@ -16,6 +16,7 @@
 
 ####1.2 Install Mojolicious::Plugin::YamlConfig
 <pre>sudo cpan Mojolicious::Plugin::YamlConfig</pre>
+<pre>(just be sure you also have instaled YAML::XS - sudo cpan YAML::XS)</pre>
 
 
 ###2. Clone this repository
