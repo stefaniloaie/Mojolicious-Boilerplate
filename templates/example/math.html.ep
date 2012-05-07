@@ -1,7 +1,46 @@
 % layout 'starter';
 % title 'Welcome';
-
+% use JSON;
 <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+
+<script type="text/javascript" src="https://www.google.com/jsapi"></script>
+<script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() { 
+var data = new google.visualization.DataTable();
+data.addColumn('number', 'Date');
+data.addColumn('number', 'Total investment');
+data.addColumn('number', 'Debt');
+data.addColumn('number', 'Credit value');
+
+       data.addRows(<%== JSON::to_json( $display_inv ) %>);
+			 
+        var options = {
+          title: 'Investment ratings'
+        };
+	if( <%== JSON::to_json( $display_inv ) %>.length > 100 ){
+           var chart = new google.visualization.LineChart(document.getElementById('chart_div'));
+           chart.draw(data, options);
+	}
+
+var data2 = new google.visualization.DataTable();
+data2.addColumn('number','Date');
+data2.addColumn('number', 'App numbers');
+	data2.addRows(<%== JSON::to_json($display_app)%>);
+
+	if(<%== JSON::to_json( $display_app ) %>.length > 100 ){
+           var chart2 = new google.visualization.LineChart(document.getElementById('chart_div2'));
+           chart2.draw(data2);
+	}
+
+
+}
+</script>
+
+
+
+
 
 <script type="text/javascript">
 
@@ -133,7 +172,7 @@ function go_to_page(page_num){
 </script>
 
 <body>
-<div style="float:left;width:50%">
+<div style="float:left; width:50%">
 <form action="/alabala" method="post" class="form-horizontal">
 
 <legend>Please input the data you want: </legend>
@@ -145,9 +184,9 @@ function go_to_page(page_num){
 <div class="control-group"><label for="6" class="control-label">Start Cash: </label><input type="text" id="6" name="start_cash"></div>  
 <div class="control-group"><label for="7" class="control-label">Initial Debt: </label><input type="text" id="7" name="initial_debt"></div>
 <div class="control-group"><label for="8" class="control-label">Credit Rate: </label><input type="text" id="8" name="credit_interest_rate" tyle="margin-top:-15px "> </div>
-<div class="control-group"><label for="9" class="control-label">Total Months: </label><input type="text" id="9" name="total_months" tyle="margin-top:-15px"></div>
+<div class="control-group"><label for="9" class="control-label">Total Months: </label><input type="text" id="9" name="total_months" ></div>
 
-<div class="control-group"><label for="10" class="control-label">Percent from Assuered: </label><input type="text" name="percent_from_assured" id="10" style="margin-top:px"></div>
+<div class="control-group"><label for="10" class="control-label">Percent from Assuered: </label><input type="text" name="percent_from_assured" id="10" ></div>
 
 <div class="control-group"><label for="11" class="control-label">Max Month per Credit: </label><input type="text" name="max_months_per_credit" id="11"></div>
 
@@ -157,8 +196,8 @@ function go_to_page(page_num){
 
 <div class="control-group"><label for="14" class="control-label">Annual Taxes: </label><input type="text" name="annual_taxes" id="14"></div>
 
-<div class="control-group"><label for="15" class="control-label">Annual Reparation: </label><input type="text" name="annual_reparations" id="15"></div>
-<input type="submit" value="Submit">
+<div class="control-group"><label for="15" class="control-label">Annual Reparation: </label><input type="text" name="annual_reparations" id="15"></div><br><br><br>
+<input type="submit" value="Submit"><br><br><br>
 </form>
 </div>
 
@@ -166,12 +205,12 @@ function go_to_page(page_num){
 <input type='hidden' id='show_per_page' /> 
 <input type='hidden' id='pages'/>
 
-<div style="float:left" id="content" >   
+<div id="content" >   
 % my $i=1;
 % foreach my $month ( @$math ) {
 	<ul>
 	<lh>Month: <%= $i%></lh>	
-	<li>Num apps: <%= $month->{num_aps} %> </li>
+	<li>Num apps:<%= $month->{num_aps} %> </li>
 	<li>Debt: <%= $month->{debt} %></li>
 	<li>Asset value: <%= $month->{assets_value} %></li>
 	<li>Total to invest: <%= $month->{total_to_invest} %></li>
@@ -182,6 +221,10 @@ function go_to_page(page_num){
 % $i=$i+1; }
 </div>
 
-<div id='page_navigation' style=""></div>  
+
+<div id='page_navigation'></div>  
+   <div id="chart_div" style="width:900px; height: 500px;"></div>
+   <div id="chart_div2" style="width:900px"></div>	
+
 </body>
 </html>

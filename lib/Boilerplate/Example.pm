@@ -2,6 +2,8 @@ package Boilerplate::Example;
 use Mojo::Base 'Mojolicious::Controller';
 use Math::Financial;
 use Data::Dumper;
+use DateTime;
+use DateTime::Format::HTTP;
 use utf8;
 
 # This action will render a template
@@ -176,9 +178,28 @@ sub math{
     $i++;
   }
   
+  my $display_inv = [];
+  my $display_app = [];	
+  my $display_date = [];
+  my $dt = DateTime->now();
+  my $total_invested = 0;
+  my $credit_value = 0;
+  
+  foreach my $row ( @$months ){
+        my $year = $dt->add(months=>1)->year;
+        $total_invested += $start_config->{monthly_investment};
+	#push @$display_date, [ $dt->add( months => 1 )->year, $dt->month, $dt->day ];
+        $credit_value += $row->{credit_value};	
+	push @$display_inv, [ $year, $total_invested, $row->{debt}, $row->{credit_value} ];
+	push @$display_app, [ $year, $row->{num_aps} ];
+  }
+
   $self->render( {
 	template => 'example/math',
 	math => $months,
+	#display_date => $display_date,
+	display_inv => $display_inv,
+	display_app => $display_app, 
 	} );
 }
 
